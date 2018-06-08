@@ -1,0 +1,5 @@
+7÷3x⁷ Executar função f(x)=-3x+2 com valor inicial x=2, em até i=5 iterações e com precisão e=1
+
+7÷3x⁷ Executar função g(x)=4x^2-3x+2 com valor inicial x=2, em até i=5 iterações e com precisão e=1
+
+7÷3x⁷ Executar função h(x)=5x^3+4x^2-3x+2 com valor inicial x=2, em até i=5 iterações e com precisão e=1

@@ -35,19 +35,67 @@ f(x)=x^2 -2x +4, x=-10, i=10000, e=0.0001
 
 Que corresponde a
 
-| Função                    | Valor inicial | Nº de [iterações][1] | [Epsilon][2] |
-|:-------------------------:|:-------------:|:--------------------:|:------------:|
-| f(x)=-5x^3 +2x^2 -x +1    | x=3.5         | i=100                | e=0.01       |
-| g(x)=(3x^2 -5)/(x^2 + 3)  | x=-4          | i=1000               | e=0.005      |
-|f(x)=x^2 -2x +4            | x=-10         | i=10000              | e=0.0001     |
+| Função                     | x<sub>0</sub> | i<sub>max</sub>      | [E][2]       |
+|:--------------------------:|:-------------:|:--------------------:|:------------:|
+| `f(x)=-5x^3 +2x^2 -x +1`   | x=`3.5`       | i=`100`              | e=`0.01`     |
+| `g(x)=(3x^2 -5)/(x^2 + 3)` | x=`-4`        | i=`1000`             | e=`0.005`    |
+| `f(x)=x^2 -2x +4`          | x=`-10`       | i=`10000`            | e=`0.0001`   |
 
 #### Entrada como valor imediato
 
 Como forma opcional de execução, é possível fornecer um único caso teste direto na linha de comando:
 
+```
 python newton.zip f=f(x)=x^2-2x+4 x=3.5 i=100 e=0.01
+```
 
-> Cuidado: neste caso, cada argumento é separado por um espaço, que tem esta _única_ finalidade.
+> **Atenção**: note que, neste caso, cada argumento é separado por um espaço, que tem esta _única_ finalidade.
+
+#### Processamento da entrada
+
+A execução do programa se dá, inicialmente, pela análise sintática dos argumentos. Os
+componentes do cálculo são daí inicializados e então o cálculo é efetuado. Em caso de
+erros ou indeterminações (divisão por zero), o programa é encerrado imediatamente e a
+mensagem de erro correspondente é impressa no prompt de commando.
+
+#### Impressão do resultado
+
+O resultado será impresso no prompt de comando para execução com entrada imediata, bem
+como na entrada por meio de arquivo de texto caso não seja especificado um arquivo para
+a impressão do resultado. Caso um arquivo de saída seja especificado, qualquer dado anterior
+à execução será perdido e os novos resultados serão gravados.
+
+##### Formato do resultado
+
+Para impressão no prompt de comando, o formato do resultado segue um padrão mais verboso
+e descritivo (os valores abaixo são ilustrativos):
+
+```
+RESULTADO DE f(x)=3x^2+x-1; x=0.5 (1000 iterações, épsilon em 0.001)
+--------------------------------------------------------------------
+            Nº de iterações: 789
+Valor de x na 789ª iteração: 0.999999
+       Valor de f(0.999999): 0.0009998
+```
+
+Para impressão em arquivo de saída, o formato do resultado é mais compacto, em CSV,
+similar ao arquivo de entrada, com dados extra:
+
+```csv
+f(x)=-5x^3 +2x^2 -x +1, x=3.5, iMAX=100, e=0.01, i=97, iX=0.8830, fX=0.009
+g(x)=(3x^2 -5)/(x^2 + 3), x=-4, iMAX=1000, e=0.005, i=883, iX=0.9, fX=0.001
+f(x)=x^2 -2x +4, x=-10, iMAX=10000, e=0.0001, i=7384, iX=-3.001, fX=0.00003
+```
+
+Similar a:
+
+| Função                     | x<sub>0</sub> | i<sub>max</sub>      | [E][2]       | i            | x<sub>i</sub> | f(x<sub>i</sub>) |
+|:--------------------------:|:-------------:|:--------------------:|:------------:|:------------:|:-------------:|:----------------:|
+| `f(x)=-5x^3 +2x^2 -x +1`   | x=`3.5`       | i=`100`              | e=`0.01`     | i=`0.01`     | Xi=`0.01`     | Fx=`0.01`        |
+| `g(x)=(3x^2 -5)/(x^2 + 3)` | x=`-4`        | i=`1000`             | e=`0.005`    | i=`0.005`    | Xi=`0.005`    | Fx=`0.005`       |
+| `f(x)=x^2 -2x +4`          | x=`-10`       | i=`10000`            | e=`0.0001`   | i=`0.0001`   | Xi=`0.0001`   | Fx=`0.0001`      |
+| `f(x)=x^2 -2x +4`          | x=`-10`       | i=`10000`            | e=`0.0001`   | i=`0.0001`   | Xi=`0.0001`   | Fx=`0.0001`      |
+
 
 [1]: https://pt.wikipedia.org
 [2]: https://pt.wikipedia.org
