@@ -27,6 +27,7 @@
 #
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+import math
 from typing import Any, Optional, Union, Iterable
 
 
@@ -269,12 +270,46 @@ class Monomial(Base):
         return ''
 
 
+class Sign(Base):
+    """Classe de operação, Sign.
+
+    Representa o signal de uma função, para casos em que o sinal não é explícito, como,
+    por exemplo, a subtração de duas funções (na derivada que faz uso da regra do quociente).
+    """
+
+    def __init__(self, negative: bool, obj: Base) -> None:
+        self._negative: bool = negative
+        self._obj: Base = obj
+
+    def evaluate(self, **kwargs) -> Union[int, float]:
+        """Implementação de Base.evaluate()."""
+        value = self._obj.evaluate(**kwargs)
+        if self._negative:
+            return -value
+        return value
+
+
 class Product(Base):
     """Classe de operação, Product.
 
-    Representa a multiplicação entre duas ou mais expressões.
+    Representa a multiplicação de dois fatores.
     """
-    pass
+
+    def __init__(self, left: Base, right: Base) -> None:
+        self._left = left
+        self._right = right
+
+    def __str__(self) -> str:
+        return f"{self._left}*{self._right}"
+
+    def derive(self) -> Expr:
+        """Implementação de Base.derive().
+
+        Detalhe: y' = f'(x)*g(x) + f(x)*g'(x); y' é uma expressão: sendo esq = f(x) e dir = g(x), então
+        y = Expr(Product(esq.derive(), dir), Product(esq, dir.derive()))
+        """
+
+        return Expr(Product(self._left.derive(), self._right), Product(self._left, self._right.derive()))
 
 
 class Quotient(Base):
@@ -282,6 +317,9 @@ class Quotient(Base):
     def __init__(self, numerator: Base, denominator: Base) -> None:
         self._numerator = numerator
         self._denominator = denominator
+
+    def __str__(self) -> str:
+        return f"{self._numerator}/{self._denominator}"
 
 
 class Power(Base):
@@ -300,6 +338,10 @@ class Power(Base):
             exp = e
         return f"{self._base}^{exp}"
 
+    def evaluate(self, **kwargs) -> Union[int, float]:
+        """Implementação de Base.evaluate(**kwargs)"""
+        return self._base.evaluate(**kwargs) ** self._exponent.evaluate(**kwargs)
+
 
 class Radical(Base):
 
@@ -314,6 +356,10 @@ class Radical(Base):
         else:
             ind = i
         return f"'{ind}V{self._radicand}'"
+
+    def evaluate(self, **kwargs) -> Union[int, float]:
+        """Implementação de Base.evaluate(**kwargs)"""
+        pass
 
 
 class Log2(Base):
@@ -335,15 +381,21 @@ class LogN(Base):
 
 
 class Cos(Base):
-    pass
+
+    def __init__(self, value: Base) -> None:
+        self._value = value
 
 
 class Sin(Base):
-    pass
+
+    def __init__(self, value: Base) -> None:
+        self._value = value
 
 
 class Tan(Base):
-    pass
+
+    def __init__(self, value: Base) -> None:
+        self._value = value
 
 
 if __name__ == '__main__':
