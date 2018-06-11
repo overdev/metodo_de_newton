@@ -127,16 +127,16 @@ por `^` e, para funções exponenciais ou expoentes negativos, o expoente deve
 estar delimitado por parênteses. Raíses podem ser declaradas de duas maneiras, mas
 ambas usam a letra `V` como operador. Exemplos:
 
-| Operador         | Símbolo  | Exemplo                         |
-|:----------------:|:--------:|:-------------------------------:|
-| Sinal positivo   | `+`      | `+100` ou `3t `                 |
-| Sinal negativo   | `-`      | `-x`                            |
-| Adição           | `+`      | `4+3x`                          |
-| Subtração        | `-`      | `x-5`                           |
-| Multiplicação    | `*`      | `4x*E`                          |
-| Divisão          | `/`      | `Pi/2`                          |
-| Exponenciação    | `^`      | `x^4` ou `E^(x^2)` ou `2x^(-1)` |
-| Radiciação       | `V`      | `'3V27'`, `V5x'` ou `V(3_5x^4)` |
+| Operador         | Símbolo  | Exemplo                          |
+|:----------------:|:--------:|:--------------------------------:|
+| Sinal positivo   | `+`      | `+100` ou `3t `                  |
+| Sinal negativo   | `-`      | `-x`                             |
+| Adição           | `+`      | `4+3x`                           |
+| Subtração        | `-`      | `x-5`                            |
+| Multiplicação    | `*`      | `4x*E`                           |
+| Divisão          | `/`      | `Pi/2`                           |
+| Exponenciação    | `^`      | `x^4` ou `E^(x^2)` ou `2x^(-1)`  |
+| Radiciação       | `V`      | `'3V27'`, `V5x'` ou `V(3_5x^4)`  |
 
 > Note que, nos exemplos de radiciação, o apóstrofo `'` serve para delimitar o
 > índice (quando diferente de 2) e o radicando (quando a expressão for simples).
