@@ -128,7 +128,7 @@ estar delimitado por parênteses. Raíses podem ser declaradas de duas maneiras,
 ambas usam a letra `V` como operador. Exemplos:
 
 | Operador         | Símbolo  | Exemplo                         |
-|: ---------------:|:--------:|:-------------------------------:|
+|:----------------:|:--------:|:-------------------------------:|
 | Sinal positivo   | `+`      | `+100` ou `3t `                 |
 | Sinal negativo   | `-`      | `-x`                            |
 | Adição           | `+`      | `4+3x`                          |
