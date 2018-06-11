@@ -26,10 +26,16 @@
 # THE SOFTWARE.
 #
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 from enum import Enum
 from typing import List
+import classes
 
-__all__ = []
+__all__ = [
+    'TKind',
+    'Token',
+    'Lexer',
+]
 
 
 END = ('\n',)
@@ -40,7 +46,7 @@ LETTERS = tuple('abcdefghijklmnopqrstuvwxyz')
 OPERATORS = tuple('+-*/^')
 GROUPS = tuple("([])")
 FNLETTERS = tuple('PEVLCST')
-FUNCTIONS = 'Pi', 'E', 'V', 'Log', 'Ln', 'Cos', 'Sen', 'Tg', 'Sec', 'CoSec'
+FUNCTIONS = 'Pi', 'Tau', 'E', 'V', 'Log', 'Ln', 'Cos', 'Sen', 'Tg', 'Sec', 'CoSec', 'CoTg'
 
 
 class TKind(Enum):
@@ -49,18 +55,20 @@ class TKind(Enum):
     LITERAL = 2
     OPERATOR = 3
     PI = 4
-    E = 5
-    RADICAL = 6
-    LOG = 7
-    LN = 8
-    COS = 9
-    SEN = 10
-    TG = 11
-    SEC = 12
-    COSEC = 13
-    LIGATURE = 14
-    GROUP_BEGIN = 15
-    GROUP_END = 16
+    TAU = 5
+    E = 6
+    RADICAL = 7
+    LOG = 8
+    LN = 9
+    COS = 10
+    SEN = 11
+    TG = 12
+    SEC = 13
+    COSEC = 14
+    COTG = 15
+    LIGATURE = 16
+    GROUP_BEGIN = 17
+    GROUP_END = 18
 
 
 class Token:
@@ -101,7 +109,7 @@ class Lexer:
             print(err)
         quit(-1)
 
-    def analise(self, expression: str) -> bool:
+    def tokenize(self, expression: str) -> bool:
         """Efetua a análise da expressão `expression`."""
         index: int = 0
         start: int = 0
@@ -126,7 +134,7 @@ class Lexer:
                 return char in values
 
         def expect(*values, msg: str="{} experado, {} encontrado.") -> bool:
-            global char
+            # global char
             n = len(values)
             if n == 0:
                 return False
@@ -158,8 +166,9 @@ class Lexer:
 
             char = ch()
 
-            if match(*NUMBERS):
-                dec = False
+            if match(*NUMBERS) or match('.'):
+                dec = char == '.'
+                num = char != '.'
                 if kind is not TKind.NUMBER and kind is not TKind.NONE:
                     save(Token(kind, value, start))
                 start = index
@@ -168,10 +177,15 @@ class Lexer:
                 index += 1
                 char = ch()
                 if match('.'):
+                    if dec:
+                        self._errors.append('Ponto decimal inexperado em \'{}\''.format(expression[start:]))
+                        self.quit()
                     dec = True
                     value += char
                     index += 1
                     char = ch()
+                    if not num and not expect(*NUMBERS):
+                        self.quit()
                 while match(*NUMBERS):
                     value += char
                     index += 1
@@ -220,6 +234,9 @@ class Lexer:
                 if fn.startswith('Pi'):
                     save(Token(kind.PI, 'Pi', start))
                     index += 2
+                elif fn.startswith('Tau'):
+                    save(Token(kind.TAU, 'Tau', start))
+                    index += 3
                 elif fn.startswith('E'):
                     save(Token(kind.E, 'E', start))
                     index += 1
@@ -242,11 +259,14 @@ class Lexer:
                     save(Token(kind.TG, 'Tg', start))
                     index += 2
                 elif fn.startswith('Sec'):
-                    save(Token(kind.SEC, 'Tg', start))
+                    save(Token(kind.SEC, 'Sec', start))
                     index += 2
                 elif fn.startswith('CoSec'):
                     save(Token(kind.COSEC, 'CoSec', start))
                     index += 5
+                elif fn.startswith('CoTg'):
+                    save(Token(kind.COTG, 'CoTg', start))
+                    index += 4
                 else:
                     self._errors.append("Símbolo inválido: {}".format(fn))
                     self.quit()
@@ -274,8 +294,11 @@ class Lexer:
             if kind is not TKind.NONE:
                 save(Token(kind, value, start))
 
+    def analise(self) -> None:
+        pass
+
 if __name__ == '__main__':
     lex = Lexer()
-    lex.analise("(+5.5x)^2/3CoSec(5)^2+2*Log3:5")
+    lex.tokenize("(+.5x)^2/3.CoTg(5)^2+2*LnE")
     for t in lex.tokens:
         print(t)

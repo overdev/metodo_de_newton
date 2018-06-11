@@ -36,6 +36,18 @@ def clsname(obj) -> str:
     return obj.__class__.__qualname__
 
 
+def nroot(n: int, x: Union[int, float]) -> Union[int, float]:
+    """Função auxiliar que retorna a raiz n-ésima de x."""
+    if n <= 0 :
+        raise ValueError("Raíz de índice <= 0.")
+    elif n == 1:
+        return x
+    elif n == 2:
+        return round(math.sqrt(abs(x)), 14)
+    else:
+        return round(math.pow(abs(x), 1 / n), 14)
+
+
 def signal(value: Union[int, float]) -> str:
     """Retorna o sinal (textual) do valor `value`."""
     return '-' if value < 0 else '+'
@@ -362,16 +374,11 @@ class Radical(Base):
         pass
 
 
-class Log2(Base):
+class Log(Base):
 
-    def __init__(self, logaritm: Base) -> None:
+    def __init__(self, logaritm: Base, base: Base) -> None:
         self._logaritm = logaritm
-
-
-class Log10(Base):
-
-    def __init__(self, logaritm: Base) -> None:
-        self._logaritm = logaritm
+        self._base = base
 
 
 class LogN(Base):
@@ -405,3 +412,4 @@ if __name__ == '__main__':
     pwr = Power(Constant(4), Literal('x'))
     rad = Radical(Constant(2), Constant(9))
     print(c, x, exp, pwr, rad)
+    print(nroot(2, 4))

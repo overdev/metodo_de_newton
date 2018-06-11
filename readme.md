@@ -81,7 +81,7 @@ Valor de x na 789ª iteração: 0.999999
 Para impressão em arquivo de saída, o formato do resultado é mais compacto, em CSV,
 similar ao arquivo de entrada, com dados extra:
 
-```csv
+```
 f(x)=-5x^3 +2x^2 -x +1, x=3.5, iMAX=100, e=0.01, i=97, iX=0.8830, fX=0.009
 g(x)=(3x^2 -5)/(x^2 + 3), x=-4, iMAX=1000, e=0.005, i=883, iX=0.9, fX=0.001
 f(x)=x^2 -2x +4, x=-10, iMAX=10000, e=0.0001, i=7384, iX=-3.001, fX=0.00003
@@ -96,6 +96,96 @@ Similar a:
 | `f(x)=x^2 -2x +4`          | x=`-10`       | i=`10000`            | e=`0.0001`   | i=`0.0001`   | Xi=`0.0001`   | Fx=`0.0001`      |
 | `f(x)=x^2 -2x +4`          | x=`-10`       | i=`10000`            | e=`0.0001`   | i=`0.0001`   | Xi=`0.0001`   | Fx=`0.0001`      |
 
+
+### Síntaxe
+
+Segue abaixo as regras básicas de síntaxe para a definição de funções.
+
+#### Numerais
+
+Valores inteiros e reais são suportados. Números reais usam o ponto (`.`, não `,`)
+para separar as casas decimais. Exemplos:
+```
+REAIS VÁLIDOS:
+0.0     3.     .301       0.0001     102103.2
+
+INTEIROS VÁLIDOS:
+000     3      006001     10346703
+```
+
+#### Literais
+
+Qualquer letra minúscula do alfabeto (`a-z`) será interpretada como literal. Um
+literal será sempre composto de uma única letra. Letras maiúsculas têm outra 
+finalidade, descrita abaixo. 
+
+#### Operadores
+
+Os operadores `+` e `-` atuam de modo unário (sinal) e binário (adição e subtração). Para
+multiplicação, `*` é usado; e na divisão, `/`. Expoentes devem estar precedidos
+por `^` e, para funções exponenciais ou expoentes negativos, o expoente deve
+estar delimitado por parênteses. Raíses podem ser declaradas de duas maneiras, mas
+ambas usam a letra `V` como operador. Exemplos:
+
+| Operador         | Símbolo  | Exemplo                         |
+|: ---------------:|:--------:|:-------------------------------:|
+| Sinal positivo   | `+`      | `+100` ou `3t `                 |
+| Sinal negativo   | `-`      | `-x`                            |
+| Adição           | `+`      | `4+3x`                          |
+| Subtração        | `-`      | `x-5`                           |
+| Multiplicação    | `*`      | `4x*E`                          |
+| Divisão          | `/`      | `Pi/2`                          |
+| Exponenciação    | `^`      | `x^4` ou `E^(x^2)` ou `2x^(-1)` |
+| Radiciação       | `V`      | `'3V27'`, `V5x'` ou `V(3_5x^4)` |
+
+> Note que, nos exemplos de radiciação, o apóstrofo `'` serve para delimitar o
+> índice (quando diferente de 2) e o radicando (quando a expressão for simples).
+> Na segunda forma, de função, o índice e o radicando são delimitados por parênteses
+> e separados entre si por `_`.  
+
+#### Constantes Literais
+
+Para constantes literais, `Pi`, `Tau` e `E` estão disponíveis. A tabela
+abaixo mostra a precisão utilizada.
+
+| `Pi`              | `Tau`             | `E`               |
+|:-----------------:|:-----------------:|:-----------------:|
+| 3.141592653589793 | 6.283185307179586 | 2.718281828459045 |
+
+
+#### Funções
+
+Para funções, a síntaxe segue -- como o nome descreve, o padrão de função. Por esta
+razão, elas podem ser utilizadas como parte literal (ex.: `3Ln(x)^2` = `3*(Ln(x))^2`)
+
+As funções
+disponíveis são:
+
+| Função            | Símbolo | Exemplo           |
+|:-----------------:|:-------:|:-----------------:|
+| Logarítmo         | `Log`   | `Log(x)`, `Log(2_32)` |
+| Logarítmo Natural | `Ln`    | `Ln(x)`, `Ln(E)` |
+| Cosseno           | `Cos`   | `Cos(45)`, `Cos(3x)^2` |
+| Seno              | `Sen`   | `Sen(3x+2)` |
+| Tangente          | `Tg`    | `Tg(1/x)` |
+| Secante           | `Sec`   | `Pi*Sec(180)` |
+| Cossecante        | `CoSec` | `CoSec(x-1)` |
+| Cotangente        | `CoTg`  | `2CoTg(Vx')` |
+
+> **Atenção**: Para `Log(x)`, a base padrão é 10. Assim como em radicais, a base e o
+> logaritmando devem estar separados por `_`.
+
+#### Delimitadores
+
+Parênteses `()` e colchetes `[]` podem ser utilizados como delimitadores. É importante
+notar que expressões delimitadas adjacentes (ex.: `(2x+1)(2x-1)`) não são interpretadas como
+multiplicação; o operador `*` _deve_ estar presente (também por questão de simetria com o operador `/`).
+
+Espaços em branco são suportados apenas fora do contexto da execução, isto é,
+durante a análise sintática. O prompt de comando, por definição, considera espaços
+como separadores de argumentos, portanto, algo como `f(x)=32x^2 +5x -2` será recebido
+não como um polinômio, mas como 3 elementos: `f(x)=32x^2`, `+5x` e `-3`. Por este
+motivo, é melhor evitar espaços em braco.
 
 [1]: https://pt.wikipedia.org
 [2]: https://pt.wikipedia.org
