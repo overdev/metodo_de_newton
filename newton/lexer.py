@@ -295,7 +295,12 @@ class Lexer:
                 save(Token(kind, value, start))
 
     def analise(self) -> None:
-        pass
+
+        while True:
+            index = 0
+
+            def get():
+                return self.tokens[index]
 
 if __name__ == '__main__':
     lex = Lexer()

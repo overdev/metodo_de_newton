@@ -36,7 +36,7 @@ sup1 = unicodedata.lookup("Superscript One")
 sup7 = unicodedata.lookup("Superscript Seven")
 sup9 = unicodedata.lookup("Superscript Nine")
 sqr = unicodedata.lookup("Square Root")
-div = unicodedata.lookup("Division Sign")
+div = unicodedata.lookup("Subtraction Sign")
 
 def print_help() -> None:
     s = """Modo de uso:

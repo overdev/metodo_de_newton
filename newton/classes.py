@@ -191,7 +191,7 @@ class Literal(Base):
 
     def __str__(self) -> str:
         """Implementação de Base.__str__()."""
-        return f"{self._name}"
+        return f"{self._k}"
 
     @property
     def name(self) -> str:
@@ -209,7 +209,7 @@ class Literal(Base):
         para substituição do valor.
         """
         if self._name not in kwargs:
-            raise EvaluationError(f"'{self._name}' requerido mas não encontrado nos argumentos-chave.")
+            raise EvaluationError(f"'{self._k}' requerido mas não encontrado nos argumentos-chave.")
         return kwargs.get(self._name, 1)
 
 
@@ -348,7 +348,7 @@ class Power(Base):
             exp = e[1:]
         else:
             exp = e
-        return f"{self._base}^{exp}"
+        return f"{self._k}^{exp}"
 
     def evaluate(self, **kwargs) -> Union[int, float]:
         """Implementação de Base.evaluate(**kwargs)"""

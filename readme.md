@@ -89,12 +89,12 @@ f(x)=x^2 -2x +4, x=-10, iMAX=10000, e=0.0001, i=7384, iX=-3.001, fX=0.00003
 
 Similar a:
 
-| Função                     | x<sub>0</sub> | i<sub>max</sub>      | [E][2]       | i            | x<sub>i</sub> | f(x<sub>i</sub>) |
-|:--------------------------:|:-------------:|:--------------------:|:------------:|:------------:|:-------------:|:----------------:|
-| `f(x)=-5x^3 +2x^2 -x +1`   | x=`3.5`       | i=`100`              | e=`0.01`     | i=`0.01`     | Xi=`0.01`     | Fx=`0.01`        |
-| `g(x)=(3x^2 -5)/(x^2 + 3)` | x=`-4`        | i=`1000`             | e=`0.005`    | i=`0.005`    | Xi=`0.005`    | Fx=`0.005`       |
-| `f(x)=x^2 -2x +4`          | x=`-10`       | i=`10000`            | e=`0.0001`   | i=`0.0001`   | Xi=`0.0001`   | Fx=`0.0001`      |
-| `f(x)=x^2 -2x +4`          | x=`-10`       | i=`10000`            | e=`0.0001`   | i=`0.0001`   | Xi=`0.0001`   | Fx=`0.0001`      |
+| Função                  | x<sub>0</sub> | i<sub>max</sub>      | [E][2]       | i            | x<sub>i</sub> | f(x<sub>i</sub>) |
+|:-----------------------:|:-------------:|:--------------------:|:------------:|:------------:|:-------------:|:----------------:|
+| `f(x)=-5x^3+2x^2-x +1`  | x=`3.5`       | i=`100`              | e=`0.01`     | i=`0.01`     | Xi=`0.01`     | Fx=`0.01`        |
+| `g(x)=(3x^2-5)/(x^2+3)` | x=`-4`        | i=`1000`             | e=`0.005`    | i=`0.005`    | Xi=`0.005`    | Fx=`0.005`       |
+| `f(x)=x^2-2x+4`         | x=`-10`       | i=`10000`            | e=`0.0001`   | i=`0.0001`   | Xi=`0.0001`   | Fx=`0.0001`      |
+| `f(x)=x^3-x-5 `         | x=`-10`       | i=`10000`            | e=`0.0001`   | i=`0.0001`   | Xi=`0.0001`   | Fx=`0.0001`      |
 
 
 ### Síntaxe
@@ -184,7 +184,7 @@ multiplicação; o operador `*` _deve_ estar presente (também por questão de s
 Espaços em branco são suportados apenas fora do contexto da execução, isto é,
 durante a análise sintática. O prompt de comando, por definição, considera espaços
 como separadores de argumentos, portanto, algo como `f(x)=32x^2 +5x -2` será recebido
-não como um polinômio, mas como 3 elementos: `f(x)=32x^2`, `+5x` e `-3`. Por este
+não como um polinômio, mas como 3 elementos: `f(x)=32x^2`, `+5x` e `-2`. Por este
 motivo, é melhor evitar espaços em braco.
 
 [1]: https://pt.wikipedia.org
