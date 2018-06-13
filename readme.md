@@ -6,6 +6,8 @@ Este projeto, como o nome sugere, é a implementação na linguagem de programa�
 [Python](https://www.python.org) (na versão 3.6.x) do [Método de Newton-Raphson](https://pt.wikipedia.org/wiki/Método_de_Newton-Raphson),
 que tem por objetivo estimar as raíses (zeros) de uma função.
 
+> **Atenção**: este documento é um esboço.
+
 ### Características
 
 O ciclo de vida segue a estrutura básica de um programa executado por [linha de comando](https://pt.wikipedia.org/wiki/Interface_de_linha_de_comandos):
@@ -82,9 +84,9 @@ Para impressão em arquivo de saída, o formato do resultado é mais compacto, e
 similar ao arquivo de entrada, com dados extra:
 
 ```
-f(x)=-5x^3 +2x^2 -x +1, x=3.5, iMAX=100, e=0.01, i=97, iX=0.8830, fX=0.009
-g(x)=(3x^2 -5)/(x^2 + 3), x=-4, iMAX=1000, e=0.005, i=883, iX=0.9, fX=0.001
-f(x)=x^2 -2x +4, x=-10, iMAX=10000, e=0.0001, i=7384, iX=-3.001, fX=0.00003
+f(x)=-5x^3+2x^2-x +1,x=3.5, iMAX=100, e=0.01, i=97, iX=0.8830, fX=0.009
+g(x)=(3x^2-5)/(x^2+3), x=-4, iMAX=1000, e=0.005, i=883, iX=0.9, fX=0.001
+f(x)=x^2-2x+4, x=-10, iMAX=10000, e=0.0001, i=7384, iX=-3.001, fX=0.00003
 ```
 
 Similar a:

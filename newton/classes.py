@@ -1,6 +1,8 @@
 # !/usr/bin/python
 # -*- coding: utf-8 -*-
 
+
+'''
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
 # The MIT License (MIT)
@@ -413,3 +415,4 @@ if __name__ == '__main__':
     rad = Radical(Constant(2), Constant(9))
     print(c, x, exp, pwr, rad)
     print(nroot(2, 4))
+'''

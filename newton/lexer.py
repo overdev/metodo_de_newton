@@ -28,14 +28,16 @@
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 from enum import Enum
-from typing import List
-import classes
+from typing import List, Union, Optional
+import classes2
 
 __all__ = [
     'TKind',
     'Token',
     'Lexer',
 ]
+
+SENTINEL = object()
 
 
 END = ('\n',)
@@ -85,6 +87,8 @@ class Token:
 
     def __repr__(self) -> str:
         return f"({self.kind.name}: '{self.value}' @{self.index})"
+
+    __str__ = __repr__
 
 
 class Lexer:
@@ -294,13 +298,114 @@ class Lexer:
             if kind is not TKind.NONE:
                 save(Token(kind, value, start))
 
-    def analise(self) -> None:
 
-        while True:
-            index = 0
+class Parser:
 
-            def get():
-                return self.tokens[index]
+    def __init__(self) -> None:
+        self._index = 0
+        self._tokens: List[Token] = []
+
+    @property
+    def token(self) -> Token:
+        return self._tokens[self._index]
+
+    def match(self, *value) -> bool:
+        n = len(value)
+        if n == 0:
+            return False
+        for v in value:
+            if isinstance(v, TKind) and v is self.token.kind:
+                return True
+            elif isinstance(v, str) and v == self.token.value:
+                return True
+        return False
+
+    def next(self) -> Union[Token, object]:
+        self._index += 1
+        if not 0 <= self._index < len(self._tokens):
+            return SENTINEL
+        return self._tokens[self._index]
+
+    def expect(self, *value) -> None:
+        n = len(value)
+        if n == 0:
+            print(f"{value} experado, {self.token} achado.")
+            quit()
+        elif not self.match(*value):
+            print(f"{value} experado, {self.token} achado.")
+            quit()
+        self.next()
+
+    def parse_constant(self) -> Optional[classes2.Constant]:
+        positive = True
+        if self.match('+', '-', TKind.NUMBER):
+            if self.match('-'):
+                positive = False
+                self.next()
+
+            if self.match(TKind.NUMBER):
+                if '.' in self.token.value:
+                    k = float(self.token.value)
+                else:
+                    k = int(self.token.value)
+                self.next()
+            else:
+                k = 1
+            return classes2.Constant(k if positive else -k)
+        return None
+
+    def parse_literal(self) -> Optional[classes2.Literal]:
+        if self.match(TKind.LITERAL):
+            x = self.token.value
+            self.next()
+            return classes2.Literal(x)
+        return None
+
+    def parse_radical(self) -> None:
+        pass
+
+    def parse_exponent(self) -> Union[classes2.Constant, classes2.FunctionABC]:
+        ind = self._index
+        close_brace = None
+        if self.match('^'):
+            self.next()
+            if self.match('(', '['):
+                close_brace = ')' if self.token.value == '(' else ']'
+                self.next()
+
+            e = self.parse_expr()
+
+            if close_brace:
+                self.expect(close_brace)
+            return e
+
+        else:
+            print(f"'^' expected, got{self.token.kind}")
+
+    def parse_expr(self) -> Optional[Union[classes2.Constant, classes2.FunctionABC]]:
+        ind = self._index
+        positive = True
+        const = None
+        liter = None
+        func = None
+        expon = None
+        arg = None
+
+        const = self.parse_constant()
+        if self.match(TKind.LITERAL):
+            liter = self.parse_literal()
+        elif self.match(TKind.RADICAL):
+            rad = self.parse_radical()
+
+        if self.match('^'):
+            expon = self.parse_exponent()
+
+
+
+
+        return None
+
+
 
 if __name__ == '__main__':
     lex = Lexer()

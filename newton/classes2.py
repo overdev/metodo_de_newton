@@ -1,5 +1,3 @@
-# !/usr/bin/python
-# -*- coding: utf-8 -*-
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #
@@ -26,7 +24,6 @@
 # THE SOFTWARE.
 #
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 
 import math
 from typing import Union, List, Tuple
@@ -147,7 +144,7 @@ class Constant:
         return self._k + (len(kwargs) * 0)
 
 
-class Literal(FunctionABC):
+class Literal:
     """Classe de função constante.
 
     Corresponde a `y = x`. Sua derivada é `y' = 1` e seu valor é `x`.
@@ -208,7 +205,7 @@ class Monomial(FunctionABC):
     """
     __slots__ = '_k', '_x', '_e'
 
-    def __init__(self, x: 'Literal', e: Union['Constant', Tuple[object]]=DEFAULT,
+    def __init__(self, x: Union['Literal', FunctionABC], e: Union['Constant', Tuple[object]]=DEFAULT,
                  k: Union['Constant', Tuple[object]]=DEFAULT) -> None:
         self._k: Constant = Constant(1) if k is DEFAULT else k
         self._e: Constant = Constant(1) if e is DEFAULT else e
@@ -230,7 +227,7 @@ class Monomial(FunctionABC):
             x = ''
             k = str(self._k)if self._k.k >= 0 else f"({self._k})"
         elif self._e.k < 0:
-            e = f"^({self._v})"
+            e = f"^({self._e})"
         return f"{k}{x}{e}"
 
     def __repr__(self) -> str:
@@ -281,10 +278,10 @@ class Monomial(FunctionABC):
 
     def evaluate(self, **kwargs) -> Union[int, float]:
         """Retorna o valor de `kx`. `kwargs` deve conter o nome deste literal."""
-        if self._x.name not in kwargs:
-            raise ValueError(f"'{self._x.name}' não encontrado em `kwargs`.")
-        x: Union[int, float] = kwargs.get(self._x.name, 1)
-        return x * self._k.k
+        k = self._k
+        x = self._x
+        e = self._e
+        return k.evaluate(**kwargs) * (x.evaluate(**kwargs) ** e.evaluate(**kwargs))
 
 
 class Polinomial(FunctionABC):
@@ -334,17 +331,25 @@ class Polinomial(FunctionABC):
 class Exponent(FunctionABC):
     """Classe de função exponencial.
 
-    Corresponde a `y = u^v` em que `u` e `v` são funções.
-    Sua derivada é `y' = u^v * v'` e seu valor depende de `b` e de `n`.
+    Corresponde a `y = u^v` em que a base `u` e o expoente `v` são funções,
+    ou `y = b^n` em que a base `b` é uma constante ou literal e o expoente `n` é uma constante.
+    Sua derivada é `y' = u^v * v'`, ou `y' = n*b^(n-1)` e seu valor depende da base e do expoente.
     """
     __slots__ = '_u', '_v'
 
-    def __init__(self, u, v: FunctionABC) -> None:
-        self._u: FunctionABC = u
-        self._v: FunctionABC = v
+    def __init__(self, u, v: Union[Constant, Literal, FunctionABC]) -> None:
+        self._u: Union[Constant, Literal, FunctionABC] = u
+        self._v: Union[Constant, Literal, FunctionABC] = v
 
     def __str__(self) -> str:
         """Retorna a representação textual desta função."""
+        if self.is_exponential:
+            if isinstance(self._u, FunctionABC):
+                return f"({self._u})^({self._v})"
+            else:
+                return f"{self._u}^({self._v})"
+        elif isinstance(self._u, FunctionABC):
+            return f"({self._u})^{self._v}"
         return f"{self._u}^{self._v}"
 
     def __repr__(self) -> str:
@@ -366,14 +371,19 @@ class Exponent(FunctionABC):
         return False
 
     @property
-    def u(self) -> FunctionABC:
+    def u(self) -> Union[Constant, Literal, FunctionABC]:
         """Lê a base desta função."""
         return self._u
 
     @property
-    def v(self) -> Union[FunctionABC, Constant]:
+    def v(self) -> Union[FunctionABC, Constant, Literal]:
         """Lê o expoente desta função"""
         return self._v
+
+    @property
+    def is_exponential(self) -> bool:
+        """Retorna verdadeiro caso o expoente seja uma função, e Falso caso contrário."""
+        return isinstance(self._v, (Literal, FunctionABC))
 
     def copy(self) -> 'Exponent':
         """Retorna uma cópia desta potência."""
@@ -381,7 +391,19 @@ class Exponent(FunctionABC):
 
     def derive(self) -> Union[Constant, FunctionABC]:
         """Retorna a taxa de variação de `y = b^n`, que é `y' = n*b^(n-1)`."""
-        return NotImplemented
+        if self.is_exponential:
+            return Product(self._v.derive(), self._u.derive())
+
+        elif isinstance(self._u, Constant):
+            return Constant(1)
+
+        elif isinstance(self._u, Literal):
+            ek: int = self._v.k
+            return Monomial(self._u.copy(), Constant(ek - 1), Constant(ek))
+
+        elif isinstance(self._u, FunctionABC):
+            ek: int = self._v.k
+            return Monomial(self._u.copy(), Constant(ek - 1), Constant(ek))
 
     def evaluate(self, **kwargs) -> Union[int, float]:
         """Retorna o valor desta função. A base pode depender de `kwargs`."""
@@ -408,23 +430,23 @@ class Sum(FunctionABC):
 
     def __str__(self) -> str:
         """Retorna a representação textual desta função."""
-        return f"({self._a})+({self._u})"
+        return f"({self._a})+({self._b})"
 
     def __repr__(self) -> str:
         """Retorna a representação textual do contrutor desta função."""
-        return f"{self.__class__.__qualname__}({self._a}, {self._u})"
+        return f"{self.__class__.__qualname__}({self._a}, {self._b})"
 
     def __eq__(self, other):
         """Retorna verdadeiro se esta função é igual à constante `other`. Falso, caso contrário."""
         if super(Sum, self).__eq__(other):
-            if self._b == other.u and self._a == other.a:
+            if self._b == other.u and self._a == other.radic:
                 return True
         return False
 
     def __ne__(self, other):
         """Retorna verdadeiro se esta função é diferente de `other`. Falso, caso contrário."""
         if super(Sum, self).__eq__(other):
-            if self._b != other.u or self._a != other.a:
+            if self._b != other.u or self._a != other.radic:
                 return True
         return False
 
@@ -461,7 +483,7 @@ class Subtraction(FunctionABC):
 
     __slots__ = '_a', '_b'
 
-    def __init__(self, a: Union[Constant, FunctionABC], b: Union[Constant, FunctionABC]) -> None:
+    def __init__(self, a: Union[Constant, Literal, FunctionABC], b: Union[Constant, Literal, FunctionABC]) -> None:
         self._a = a
         self._b = b
 
@@ -476,14 +498,14 @@ class Subtraction(FunctionABC):
     def __eq__(self, other):
         """Retorna verdadeiro se esta função é igual à constante `other`. Falso, caso contrário."""
         if super(Subtraction, self).__eq__(other):
-            if self._b == other.b and self._a == other.a:
+            if self._b == other.index and self._a == other.radic:
                 return True
         return False
 
     def __ne__(self, other):
         """Retorna verdadeiro se esta função é diferente de `other`. Falso, caso contrário."""
         if super(Subtraction, self).__eq__(other):
-            if self._b != other.b or self._a != other.a:
+            if self._b != other.index or self._a != other.radic:
                 return True
         return False
 
@@ -543,14 +565,14 @@ class Product(FunctionABC):
     def __eq__(self, other):
         """Retorna verdadeiro se esta função é igual à constante `other`. Falso, caso contrário."""
         if super(Product, self).__eq__(other):
-            if self._b == other.b and self._a == other.a:
+            if self._b == other.index and self._a == other.radic:
                 return True
         return False
 
     def __ne__(self, other):
         """Retorna verdadeiro se esta função é diferente de `other`. Falso, caso contrário."""
         if super(Product, self).__eq__(other):
-            if self._b != other.b or self._a != other.a:
+            if self._b != other.index or self._a != other.radic:
                 return True
         return False
 
@@ -611,7 +633,102 @@ class Quotient(Product):
         )
 
 
+class Radical(FunctionABC):
+    """Classe de função raíz.
+
+    Representa a raíz n-ésima de uma constante, literal ou função.
+    A representação textual de um radical é `V(i_n)` onde `i` é o índice (opcional) e
+    `n` é o radicando.
+    Para `y = V(i_n^p)` a derivada é `y' = (p/i)*n^((p/i)-1)`.
+    Para `y = V(i_u)`, onde `v = y` e `u` é uma função, a derivada é `y' * u'`.
+    """
+
+    def __init__(self, radic: Union[Constant, FunctionABC], index: Constant=DEFAULT) -> None:
+        self._radic = radic
+        self._index = Constant(2) if index is DEFAULT else index
+
+    def __str__(self) -> str:
+        """Retorna a representação textual desta funcão."""
+        ind = '' if self._index.k == 2 else f"{self._index}_"
+        if isinstance(self._radic, Exponent):
+            return f"V({ind}{self._radic})"
+        return f"V({ind}{self._radic})"
+
+    def __repr__(self) -> str:
+        """Retorna a representação textual desta funcão."""
+        ind = '' if self._index.k == 2 else f", {self._index}"
+        return f"{clsname(self)}({self._radic}{ind})"
+
+    def __eq__(self, other):
+        """Retorna verdadeiro se esta função é igual à constante `other`. Falso, caso contrário."""
+        if super(Radical, self).__eq__(other):
+            if self._index == other.index and self._radic == other.radic:
+                return True
+        return False
+
+    def __ne__(self, other):
+        """Retorna verdadeiro se esta função é diferente de `other`. Falso, caso contrário."""
+        if super(Radical, self).__eq__(other):
+            if self._index != other.index or self._radic != other.radic:
+                return True
+        return False
+
+    @property
+    def index(self) -> Constant:
+        """Lê o segundo fator desta função."""
+        return self._index
+
+    @property
+    def radic(self) -> Union[Constant, FunctionABC]:
+        """Lê o primeiro fator desta função."""
+        return self._radic
+
+    def copy(self) -> 'Radical':
+        """Retorna uma cópia deste produto."""
+        return Radical(self._radic.copy(), self._index.copy())
+
+    def derive(self) -> Union['Constant', 'Monomial', 'Product']:
+        """Retorna a taxa de variação de `y = u * v`, que é `y' = u' * v + u * v'` ou `y' = k * u'`."""
+        i = self._index
+        r = self._radic
+
+        if isinstance(r, Constant):
+            return Constant(1)
+
+        elif isinstance(r, Literal):
+            e = Constant(1 / i.k)
+            return Monomial(r.copy(), Constant(e.k - 1), e)
+
+        elif isinstance(r, FunctionABC):
+            if isinstance(r, Exponent):
+                # retorna a derivada do radicando se o expoente for igual ao índice.
+                if r.v == i:
+                    return r.derive()
+
+                # sendo r e i ambos constantes, a taxa de variação é 0.
+                elif isinstance(r, Constant):
+                    return Constant(0)
+
+                ek: int = i.k
+                d = Monomial(r.copy(), Constant(ek - 1), Constant(ek))
+                return Product(d, r.derive())
+
+    def evaluate(self, **kwargs) -> Union[int, float]:
+        """Retorna o valor desta função. Os termos podem depender de `kwargs`."""
+        i = self._index.k
+        r = self._radic.evaluate(**kwargs)
+        if r <= 0:
+            print(f"Erro de domínio: radicando negativo em {self}; com {kwargs}")
+            quit()
+        elif i <= 0:
+            print(f"Erro de domínio: índice negativo em {self}; com {kwargs}")
+        return nroot(i, r)
+
+
 if __name__ == '__main__':
-    f1 = Polinomial(Monomial(Literal('x'), Constant(3)), Monomial(Literal('x'), Constant(2), Constant(-5)))
-    df = f1.derive()
-    print(f1, '->', df, ':', df.evaluate(x=2))
+    # f1 = Polinomial(Monomial(Literal('x'), Constant(3)), Monomial(Literal('x'), Constant(2), Constant(-5)))
+    f2 = Radical(Exponent(Monomial(Literal('x'), Constant(2), Constant(3)), Constant(2)))
+    df = f2.derive()
+    print(repr(df))
+    # print(f1, '->', df, ':', df.evaluate(x=2))
+    print(f2, '->', df, ':', df.evaluate(x=2))
