@@ -6,8 +6,6 @@ Este projeto, como o nome sugere, é a implementação na linguagem de programa�
 [Python](https://www.python.org) (na versão 3.6.x) do [Método de Newton-Raphson](https://pt.wikipedia.org/wiki/Método_de_Newton-Raphson),
 que tem por objetivo estimar as raíses (zeros) de uma função.
 
-> **Atenção**: este documento é um esboço.
-
 ### Características
 
 O ciclo de vida segue a estrutura básica de um programa executado por [linha de comando](https://pt.wikipedia.org/wiki/Interface_de_linha_de_comandos):

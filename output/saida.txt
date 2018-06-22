@@ -1,5 +1,46 @@
-7÷3x⁷ Executar função f(x)=-3x+2 com valor inicial x=2, em até i=5 iterações e com precisão e=1
 
-7÷3x⁷ Executar função g(x)=4x^2-3x+2 com valor inicial x=2, em até i=5 iterações e com precisão e=1
 
-7÷3x⁷ Executar função h(x)=5x^3+4x^2-3x+2 com valor inicial x=2, em até i=5 iterações e com precisão e=1
+-3x+2 -> -3 para X inicial 2, e 5 iterações.
+-------------------------------------------------------------------------------
+               Total de iterações: 2
+             x na última iteração: 0.6666666666666667
+                      Epsilon (E): 1
+          f(x) na última iteração: -0.0
+     Tempo de execução (h:m:s:µs): 0:00:00
+
+
+y=+4x^2-3x+2 y'=+8x-3 e=1 x=1.0769230769230769 k=1/5 f(x)=0.9230769230769231  tempo=0:00:00
+y=+5x^3+4x^2-3x+2 y'=+15x^2+8x-3 e=1 x=1.2876712328767124 k=1/5 f(x)=0.7123287671232876  tempo=0:00:00
+
+
+-3x+2 -> -3 para X inicial 2, e 5 iterações.
+-------------------------------------------------------------------------------
+               Total de iterações: 2
+             x na última iteração: 0.6666666666666667
+                      Epsilon (E): 1
+          f(x) na última iteração: -0.0
+     Tempo de execução (h:m:s:µs): 0:00:00
+
+
+
+
++4x^2-3x+2 -> +8x-3 para X inicial 2, e 5 iterações.
+-------------------------------------------------------------------------------
+               Total de iterações: 1
+             x na última iteração: 1.0769230769230769
+                      Epsilon (E): 1
+          f(x) na última iteração: 0.9230769230769231
+     Tempo de execução (h:m:s:µs): 0:00:00
+
+
+
+
++5x^3+4x^2-3x+2 -> +15x^2+8x-3 para X inicial 2, e 5 iterações.
+-------------------------------------------------------------------------------
+               Total de iterações: 1
+             x na última iteração: 1.2876712328767124
+                      Epsilon (E): 1
+          f(x) na última iteração: 0.7123287671232876
+     Tempo de execução (h:m:s:µs): 0:00:00
+
+

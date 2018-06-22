@@ -1,0 +1,7 @@
+-3x+2 x=2 i=5 e=1 verbose
+4x^2-3x+2 x=2 i=5 e=1
+5x^3+4x^2-3x+2 x=2 i=5 e=1
+default verbose e=0.001
+-3x+2 x=2 i=25
+4x^2-3x+2 x=2 i=100
+5x^3+4x^2-3x+2 x=2 i=100
